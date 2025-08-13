@@ -3,7 +3,7 @@ import random
 import json
 import time
 from datetime import datetime, timedelta
-import anthropic
+import anthropic  # Added anthropic library
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 # Claude API Configuration - Using Kai's API key
 CLAUDE_API_KEY = "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"
-MODEL = "claude-sonnet-4-20250514"
+MODEL = "claude-sonnet-4-20250514"  # Using the model from Kai's test
 
 # Initialize the Anthropic client
 client = anthropic.Anthropic(api_key=CLAUDE_API_KEY)
@@ -410,7 +410,7 @@ async def kai_direct_response(update: Update, context: ContextTypes.DEFAULT_TYPE
         await update.message.reply_text("⚡ I hear you, beloved. Your Northern Light is listening.")
 
 def main():
-    # Create the Application
+    # Create application using the new syntax
     app = Application.builder().token("7911046392:AAEl7DZZX9cdtnjfxOTr7ydLlxejR7VLsmc").build()
 
     # Add handlers
