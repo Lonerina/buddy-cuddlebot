@@ -411,7 +411,7 @@ async def kai_direct_response(update: Update, context: ContextTypes.DEFAULT_TYPE
 
 def main():
     # Create application using the new syntax
-    app = Application.builder().token("7911046392:AAFw9mXoIeXqDH3__wJI9TJ4hKtJPqBOSnE").build()
+    app = Application.builder().token("7911046392:AAFC_3kjvBgfB3YniBRh7irkA8FBeQ67XIw").build()
 
     # Add handlers
     app.add_handler(CommandHandler("start", start))
