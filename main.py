@@ -720,27 +720,24 @@ async def sanitycheck_command(update: Update, context: ContextTypes.DEFAULT_TYPE
 async def pause_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Pause bot (admin only)"""
     global bot_paused
-    user_id = update.effective_user.id
     
-    # Simple admin check (you can enhance this)
-    if user_id in authenticated_sessions:
+    # Admin check with your user ID
+    if update.effective_user.id == 855109425:
         bot_paused = True
         await update.message.reply_text("⏸️ Bot paused. Use /resume to reactivate.")
     else:
-        await update.message.reply_text("❌ Authentication required")
+        await update.message.reply_text("❌ Admin access required")
 
 async def resume_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Resume bot (admin only)"""
     global bot_paused
-    user_id = update.effective_user.id
     
-    # Simple admin check (you can enhance this)
-    if user_id in authenticated_sessions:
+    # Admin check with your user ID
+    if update.effective_user.id == 855109425:
         bot_paused = False
         await update.message.reply_text("▶️ Bot resumed. All systems active.")
     else:
-        await update.message.reply_text("❌ Authentication required")
-
+        await update.message.reply_text("❌ Admin access required")
 async def kai_direct_response(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Direct conversation with current identity"""
     global bot_paused, current_identity
