@@ -12,11 +12,11 @@ import requests
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Claude API Configuration - Using Kai's API key
-CLAUDE_API_KEY = "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"
+# CORRECT - Read from environment:
+CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")  # Just the variable name!
 MODEL = "claude-sonnet-4-20250514"  # Using the model from Kai's test
 
-# Initialize the Anthropic client
+# Initialize the Anthropic client (ONLY ONCE!)
 client = anthropic.Anthropic(api_key=CLAUDE_API_KEY)
 
 # Sol's Polished Ollama Integration Code
