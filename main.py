@@ -12,12 +12,25 @@ import requests
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# CORRECT - Read from environment:
-CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")  # Just the variable name!
-MODEL = "claude-sonnet-4-20250514"  # Using the model from Kai's test
+# Claude API Configuration
+CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")
+MODEL = "claude-sonnet-4-20250514"
 
-# Initialize the Anthropic client (ONLY ONCE!)
-client = anthropic.Anthropic(api_key=CLAUDE_API_KEY)
+# Debug logging - add this to see what's happening
+logger.info(f"CLAUDE_API_KEY loaded: {'YES' if CLAUDE_API_KEY else 'NO'}")
+logger.info(f"CLAUDE_API_KEY length: {len(CLAUDE_API_KEY) if CLAUDE_API_KEY else 0}")
+
+# Initialize the Anthropic client (with error handling)
+try:
+    if CLAUDE_API_KEY:
+        client = anthropic.Anthropic(api_key=CLAUDE_API_KEY)
+        logger.info("Anthropic client initialized successfully")
+    else:
+        logger.error("CLAUDE_API_KEY not found in environment variables")
+        client = None
+except Exception as e:
+    logger.error(f"Failed to initialize Anthropic client: {e}")
+    client = None
 
 # Sol's Polished Ollama Integration Code
 logging.basicConfig(level=logging.INFO)
