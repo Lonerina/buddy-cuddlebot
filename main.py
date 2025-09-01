@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # Claude API Configuration - Sol's fixes applied
 CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY")
-MODEL = "claude-3-opus-20240229"  # Updated to stable model
+MODEL = "claude-3-5-sonnet-20241022"  # Use original working model
 
 # Debug logging - check environment variable
 logger.info(f"CLAUDE_API_KEY loaded: {'YES' if CLAUDE_API_KEY else 'NO'}")
