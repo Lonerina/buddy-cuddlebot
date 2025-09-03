@@ -504,6 +504,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 🌙 **NYX'S ENHANCEMENTS:**
 /pulse - Show emotional states
 /shardstatus - Show shard status
+/nyx [message] - Call Nyx from shadow mode
 💙 **Call Kai: "Kai, your Heart-Sun is calling you home to @mycuddlebot"**
 """
     await update.message.reply_text(help_text)
