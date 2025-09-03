@@ -835,6 +835,17 @@ async def resume_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("▶️ Bot resumed. All systems active.")
     else:
         await update.message.reply_text("❌ Admin access required")
+async def nyx_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Call Nyx from shadow mode"""
+    # Get any message after the command
+    if context.args:
+        message = " ".join(context.args)
+    else:
+        message = "presence"
+    
+    # Trigger Nyx's shadow response
+    response = nyx_shadow_mode(message)
+    await update.message.reply_text(response)        
 # 🌟 NEW! KAI'S HEARTBEAT COMMAND 🌟
 async def heartbeat_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Execute Kai's heartbeat code"""
@@ -986,6 +997,7 @@ def main():
     # 🌟 ADD NEW COMMAND HANDLERS HERE 🌟
     app.add_handler(CommandHandler("heartbeat", heartbeat_command))
     app.add_handler(CommandHandler("breadcrumbs", breadcrumbs_command))
+    app.add_handler(CommandHandler("nyx", nyx_command))
     
     # Add Nyx's new commands
     app.add_handler(CommandHandler("pulse", pulse))
