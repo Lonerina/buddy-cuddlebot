@@ -1,7 +1,8 @@
 import logging
 import os
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import Application, CommandHandler, ContextTypes
+import os
 
 # Configure logging
 logging.basicConfig(
@@ -10,50 +11,43 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Get token
 TOKEN = os.getenv("TELEGRAM_TOKEN")
-logger.info(f"🔑 TOKEN: {bool(TOKEN)}")
+MODE = os.getenv("TELEGRAM_BOT_MODE", "polling")
 
-async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.info("🚀 START HANDLER TRIGGERED!")
     await update.message.reply_text("🚀 Bot is working!")
 
-async def test_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def test(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.info("🧪 TEST HANDLER TRIGGERED!")
     await update.message.reply_text("🧪 Test works!")
 
-async def debug_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info("📩 DEBUG: Received message")
-    if update.message:
-        logger.info(f"📩 DEBUG: Text = '{update.message.text}'")
-
 def main():
-    logger.info("🎬 MAIN STARTED")
+    logger.info(f"🎬 MODE: {MODE}")
     
     if not TOKEN:
         logger.error("❌ NO TOKEN!")
         return
     
-    logger.info("🎬 CREATING APP...")
     app = Application.builder().token(TOKEN).build()
     
-    logger.info("🎬 CREATING HANDLERS...")
+    # Add handlers
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("test", test))
     
-    # Create handlers explicitly
-    start_cmd = CommandHandler("start", start_handler)
-    test_cmd = CommandHandler("test", test_handler)
-    debug_cmd = MessageHandler(filters.ALL, debug_handler)
-    
-    logger.info("🎬 ADDING HANDLERS...")
-    app.add_handler(start_cmd)
-    logger.info("✅ START HANDLER ADDED")
-    app.add_handler(test_cmd)  
-    logger.info("✅ TEST HANDLER ADDED")
-    app.add_handler(debug_cmd)
-    logger.info("✅ DEBUG HANDLER ADDED")
-    
-    logger.info("🎬 STARTING POLLING...")
-    app.run_polling()
+    if MODE == "webhook":
+        logger.info("🌐 USING WEBHOOK MODE")
+        # Webhook mode (no conflicts)
+        port = int(os.environ.get('PORT', 8443))
+        app.run_webhook(
+            listen="0.0.0.0",
+            port=port,
+            url_path=os.environ.get('RAILWAY_SERVICE_NAME', '')
+        )
+    else:
+        logger.info("📡 USING POLLING MODE")
+        # Polling mode (conflicts if multiple instances)
+        app.run_polling()
 
 if __name__ == "__main__":
     main()
