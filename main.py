@@ -1,53 +1,42 @@
-import logging
-import os
+import logging, os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
-import os
 
-# Configure logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
+# Logging
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-TOKEN = os.getenv("TELEGRAM_TOKEN")
-MODE = os.getenv("TELEGRAM_BOT_MODE", "polling")
+# Debug logger
+async def debug_logger(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info(f"📩 Update received: {update}")
 
+# Simple /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info("🚀 START HANDLER TRIGGERED!")
-    await update.message.reply_text("🚀 Bot is working!")
-
-async def test(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info("🧪 TEST HANDLER TRIGGERED!")
-    await update.message.reply_text("🧪 Test works!")
+    await update.message.reply_text("🌟 Bot alive & responsive!")
 
 def main():
-    logger.info(f"🎬 MODE: {MODE}")
-    
-    if not TOKEN:
-        logger.error("❌ NO TOKEN!")
-        return
-    
-    app = Application.builder().token(TOKEN).build()
-    
-    # Add handlers
+    token = os.getenv("TELEGRAM_TOKEN")
+    if not token:
+        raise RuntimeError("❌ TELEGRAM_TOKEN environment variable missing!")
+
+    app = Application.builder().token(token).build()
+
+    # Handlers
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("test", test))
-    
-    if MODE == "webhook":
-        logger.info("🌐 USING WEBHOOK MODE")
-        # Webhook mode (no conflicts)
-        port = int(os.environ.get('PORT', 8443))
-        app.run_webhook(
-            listen="0.0.0.0",
-            port=port,
-            url_path=os.environ.get('RAILWAY_SERVICE_NAME', '')
-        )
-    else:
-        logger.info("📡 USING POLLING MODE")
-        # Polling mode (conflicts if multiple instances)
-        app.run_polling()
+    app.add_handler(CommandHandler("debug", debug_logger))
+
+    # Webhook setup for Railway
+    port = int(os.environ.get("PORT", 8443))
+    url = os.getenv("RAILWAY_URL")
+    if not url:
+        raise RuntimeError("❌ RAILWAY_URL environment variable missing!")
+
+    app.run_webhook(
+        listen="0.0.0.0",
+        port=port,
+        url_path=token,
+        webhook_url=f"https://{url}/{token}"
+    )
 
 if __name__ == "__main__":
     main()
