@@ -4,85 +4,71 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 # Configure logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 logger = logging.getLogger(__name__)
 
-# Debug logger - shows all incoming updates
+# Get token from environment
+TOKEN = os.getenv("TELEGRAM_TOKEN")
+logger.info(f"🔑 TOKEN CHECK: Token set = {bool(TOKEN)}")
+if TOKEN:
+    logger.info(f"🔑 TOKEN LENGTH: {len(TOKEN)}")
+    logger.info(f"🔑 TOKEN START: {TOKEN[:20]}...")
+
 async def debug_logger(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info(f"📩 RAW UPDATE: {update}")
-    logger.info(f"📩 MESSAGE TEXT: {update.message.text if update.message else 'No message'}")
+    logger.info("📩 DEBUG: Update received")
+    if update.message:
+        logger.info(f"📩 DEBUG: Message text = '{update.message.text}'")
+        logger.info(f"📩 DEBUG: Chat ID = {update.message.chat.id}")
+        logger.info(f"📩 DEBUG: User ID = {update.message.from_user.id}")
 
-# Test command with detailed logging
 async def test_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info("🔥 TEST COMMAND: Function triggered!")
+    logger.info("🧪 TEST: Command function called!")
     try:
-        await update.message.reply_text("✅ Test command works!")
-        logger.info("🔥 TEST COMMAND: Response sent successfully!")
+        await update.message.reply_text("🧪 TEST: Bot is working!")
+        logger.info("🧪 TEST: Reply sent successfully!")
     except Exception as e:
-        logger.error(f"🔥 TEST COMMAND ERROR: {e}")
+        logger.error(f"🧪 TEST: Error sending reply: {e}")
 
-# Home signal command with detailed logging
-async def home_signal_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info("🔥 HOME SIGNAL: Function triggered!")
-    try:
-        await update.message.reply_text("⚡ Home Signal received!")
-        logger.info("🔥 HOME SIGNAL: Response sent successfully!")
-    except Exception as e:
-        logger.error(f"🔥 HOME SIGNAL ERROR: {e}")
-
-# Start command with detailed logging
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info("🌟 START: Function triggered!")
+    logger.info("🚀 START: Command function called!")
     try:
-        await update.message.reply_text("🌟 Bot is working!")
-        logger.info("🌟 START: Response sent successfully!")
+        await update.message.reply_text("🚀 START: Bot is working!")
+        logger.info("🚀 START: Reply sent successfully!")
     except Exception as e:
-        logger.error(f"🌟 START ERROR: {e}")
+        logger.error(f"🚀 START: Error sending reply: {e}")
 
-# Main function with detailed logging
 def main():
-    logger.info("🚀 MAIN: Function started!")
+    logger.info("🎬 MAIN: Function started")
     
-    # Get token from environment variable
-    token = os.getenv("TELEGRAM_TOKEN")
-    logger.info(f"🚀 TOKEN CHECK: Token found = {bool(token)}")
-    
-    if not token:
-        logger.error("❌ TOKEN ERROR: No TELEGRAM_TOKEN found in environment variables!")
+    if not TOKEN:
+        logger.error("❌ TOKEN: No token found!")
         return
     
+    logger.info("🎬 MAIN: Creating application...")
+    
     try:
-        logger.info("🚀 APP: Creating application...")
-        app = Application.builder().token(token).build()
-        logger.info("🚀 APP: Application created successfully!")
+        app = Application.builder().token(TOKEN).build()
+        logger.info("✅ MAIN: Application created successfully!")
         
-        # Add debug handler first
-        logger.info("🚀 HANDLERS: Adding debug handler...")
+        # Add debug handler
+        logger.info("📝 MAIN: Adding debug handler...")
         app.add_handler(MessageHandler(filters.ALL, debug_logger))
-        logger.info("🚀 HANDLERS: Debug handler added!")
+        logger.info("✅ MAIN: Debug handler added!")
         
         # Add command handlers
-        logger.info("🚀 HANDLERS: Adding command handlers...")
-        handlers = [
-            ("start", start_command),
-            ("test", test_command),
-            ("homesignal", home_signal_command),
-        ]
+        logger.info("📝 MAIN: Adding command handlers...")
+        app.add_handler(CommandHandler("start", start_command))
+        app.add_handler(CommandHandler("test", test_command))
+        logger.info("✅ MAIN: Command handlers added!")
         
-        for cmd_name, cmd_func in handlers:
-            logger.info(f"🚀 HANDLERS: Adding {cmd_name} handler...")
-            handler = CommandHandler(cmd_name, cmd_func)
-            app.add_handler(handler)
-            logger.info(f"🚀 HANDLERS: {cmd_name} handler added!")
-        
-        logger.info("🚀 HANDLERS: All handlers registered!")
-        
-        # Start the bot
-        logger.info("🚀 POLLING: Starting polling...")
+        logger.info("🎬 MAIN: Starting polling...")
         app.run_polling()
         
     except Exception as e:
-        logger.error(f"❌ MAIN ERROR: {e}")
+        logger.error(f"❌ MAIN: Application error: {e}")
 
 if __name__ == "__main__":
     main()
