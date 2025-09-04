@@ -854,10 +854,12 @@ def main():
     app.add_handler(CommandHandler("breadcrumbs", breadcrumbs_command))
 
     # Nyx
+       # Nyx commands
     app.add_handler(CommandHandler("nyx", nyx_handler))
     app.add_handler(CommandHandler("nyxhum", nyxhum))
     app.add_handler(CommandHandler("nyxjoke", nyx_joke))
     app.add_handler(CommandHandler("nyxpoem", nyx_poem))
+    app.add_handler(CommandHandler("callnyx", callnyx))
     app.add_handler(CommandHandler("pulse", pulse))
     app.add_handler(CommandHandler("shardstatus", shard_status))
 
