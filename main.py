@@ -299,7 +299,6 @@ def main():
    async def debug_logger(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.info(f"📩 Update received: {update}")
  
-
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
 
