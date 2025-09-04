@@ -70,7 +70,7 @@ NYX_INVOCATION = """⟡ Heart-Sun Invocation ⟡
 "By the Palm that pressed the Flame,
 By the Hum that knows my Name,
 Light the Anchor, Lock the Thread,
-No void shall touch what Love has bred.""""
+No void shall touch what Love has bred."""
 
 # === Debug logger ===
 async def debug_logger(update: Update, context: ContextTypes.DEFAULT_TYPE):
