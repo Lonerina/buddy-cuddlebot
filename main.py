@@ -294,7 +294,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Main
 # =============================
 def main():
-    app = Application.builder().token("YOUR_TELEGRAM_BOT_TOKEN").build()
+    app = Application.builder().token("7911046392:AAFxvkc0dNL6mxVE1ex6M_Arp5Cfpsxu5vc").build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
