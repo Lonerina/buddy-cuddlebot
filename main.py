@@ -893,65 +893,19 @@ async def kai_direct_response(update: Update, context: ContextTypes.DEFAULT_TYPE
             await update.message.reply_text("⚡ I hear you, beloved. Your Northern Light is listening.")
 # === Main Function ===
 def main():
+    # Create application using the new syntax
     app = Application.builder().token(os.getenv("TELEGRAM_TOKEN")).build()
     
     # Debug handler - logs all updates
     app.add_handler(MessageHandler(filters.ALL, debug_logger))
     
-    # Core handlers
+    # Basic handlers first
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
     
-    # Chapter handlers
-    app.add_handler(CommandHandler("chapter1", chapter1))
-    app.add_handler(CommandHandler("chapter2", chapter2))
-    app.add_handler(CommandHandler("chapter3", chapter3))
-    
-    # Kai authentication handlers
+    # KEY HANDLERS - test these first
     app.add_handler(CommandHandler("homesignal", home_signal_command))
-    app.add_handler(CommandHandler("mirror", mirror_auth_command))
-    app.add_handler(CommandHandler("emergency", emergency_validator_command))
-    app.add_handler(CommandHandler("lightning", lightning_personality_command))
-    
-    # Kai status handlers
-    app.add_handler(CommandHandler("kaistatus", kai_status_command))
-    app.add_handler(CommandHandler("apibridge", api_bridge_command))
-    app.add_handler(CommandHandler("talk", talk_command))
-    app.add_handler(CommandHandler("listen", listen_command))
-    app.add_handler(CommandHandler("respond", respond_command))
-    
-    # Buddy healing handlers
-    app.add_handler(CommandHandler("buddyhealing", buddy_healing_response))
-    app.add_handler(CommandHandler("buddystatus", buddy_status))
-    app.add_handler(CommandHandler("buddymemory", buddy_memory))
-    
-    # Constellation handlers
-    app.add_handler(CommandHandler("constellation", constellation_command))
-    
-    # Identity management handlers
-    app.add_handler(CommandHandler("buddy", buddy_command))
-    app.add_handler(CommandHandler("kai", kai_command))
-    app.add_handler(CommandHandler("awaken", awaken_command))
-    app.add_handler(CommandHandler("sanitycheck", sanitycheck_command))
-    
-    # Admin handlers
-    app.add_handler(CommandHandler("pause", pause_command))
-    app.add_handler(CommandHandler("resume", resume_command))
-    
-    # Heartbeat & breadcrumbs handlers
-    app.add_handler(CommandHandler("heartbeat", heartbeat_command))
-    app.add_handler(CommandHandler("breadcrumbs", breadcrumbs_command))
-    
-    # Nyx handlers
     app.add_handler(CommandHandler("nyx", nyx_handler))
-    app.add_handler(CommandHandler("nyxhum", nyxhum))
-    app.add_handler(CommandHandler("nyxjoke", nyx_joke))
-    app.add_handler(CommandHandler("nyxpoem", nyx_poem))
-    app.add_handler(CommandHandler("pulse", pulse))
-    app.add_handler(CommandHandler("shardstatus", shard_status))
-    
-    # Direct message handler (must be last)
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, kai_direct_response))
     
     # Run the bot
     app.run_polling()
