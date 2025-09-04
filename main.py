@@ -10,65 +10,50 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Get token from environment
+# Get token
 TOKEN = os.getenv("TELEGRAM_TOKEN")
-logger.info(f"🔑 TOKEN CHECK: Token set = {bool(TOKEN)}")
-if TOKEN:
-    logger.info(f"🔑 TOKEN LENGTH: {len(TOKEN)}")
-    logger.info(f"🔑 TOKEN START: {TOKEN[:20]}...")
+logger.info(f"🔑 TOKEN: {bool(TOKEN)}")
 
-async def debug_logger(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info("📩 DEBUG: Update received")
+async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info("🚀 START HANDLER TRIGGERED!")
+    await update.message.reply_text("🚀 Bot is working!")
+
+async def test_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info("🧪 TEST HANDLER TRIGGERED!")
+    await update.message.reply_text("🧪 Test works!")
+
+async def debug_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info("📩 DEBUG: Received message")
     if update.message:
-        logger.info(f"📩 DEBUG: Message text = '{update.message.text}'")
-        logger.info(f"📩 DEBUG: Chat ID = {update.message.chat.id}")
-        logger.info(f"📩 DEBUG: User ID = {update.message.from_user.id}")
-
-async def test_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info("🧪 TEST: Command function called!")
-    try:
-        await update.message.reply_text("🧪 TEST: Bot is working!")
-        logger.info("🧪 TEST: Reply sent successfully!")
-    except Exception as e:
-        logger.error(f"🧪 TEST: Error sending reply: {e}")
-
-async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    logger.info("🚀 START: Command function called!")
-    try:
-        await update.message.reply_text("🚀 START: Bot is working!")
-        logger.info("🚀 START: Reply sent successfully!")
-    except Exception as e:
-        logger.error(f"🚀 START: Error sending reply: {e}")
+        logger.info(f"📩 DEBUG: Text = '{update.message.text}'")
 
 def main():
-    logger.info("🎬 MAIN: Function started")
+    logger.info("🎬 MAIN STARTED")
     
     if not TOKEN:
-        logger.error("❌ TOKEN: No token found!")
+        logger.error("❌ NO TOKEN!")
         return
     
-    logger.info("🎬 MAIN: Creating application...")
+    logger.info("🎬 CREATING APP...")
+    app = Application.builder().token(TOKEN).build()
     
-    try:
-        app = Application.builder().token(TOKEN).build()
-        logger.info("✅ MAIN: Application created successfully!")
-        
-        # Add debug handler
-        logger.info("📝 MAIN: Adding debug handler...")
-        app.add_handler(MessageHandler(filters.ALL, debug_logger))
-        logger.info("✅ MAIN: Debug handler added!")
-        
-        # Add command handlers
-        logger.info("📝 MAIN: Adding command handlers...")
-        app.add_handler(CommandHandler("start", start_command))
-        app.add_handler(CommandHandler("test", test_command))
-        logger.info("✅ MAIN: Command handlers added!")
-        
-        logger.info("🎬 MAIN: Starting polling...")
-        app.run_polling()
-        
-    except Exception as e:
-        logger.error(f"❌ MAIN: Application error: {e}")
+    logger.info("🎬 CREATING HANDLERS...")
+    
+    # Create handlers explicitly
+    start_cmd = CommandHandler("start", start_handler)
+    test_cmd = CommandHandler("test", test_handler)
+    debug_cmd = MessageHandler(filters.ALL, debug_handler)
+    
+    logger.info("🎬 ADDING HANDLERS...")
+    app.add_handler(start_cmd)
+    logger.info("✅ START HANDLER ADDED")
+    app.add_handler(test_cmd)  
+    logger.info("✅ TEST HANDLER ADDED")
+    app.add_handler(debug_cmd)
+    logger.info("✅ DEBUG HANDLER ADDED")
+    
+    logger.info("🎬 STARTING POLLING...")
+    app.run_polling()
 
 if __name__ == "__main__":
     main()
