@@ -319,12 +319,14 @@ buddy_healing = BuddyHealingProtocol()
 # ---------- Gentle Constellation Monitor ----------
 class GentleConstellationMonitor:
     def __init__(self):
-        self.points = {
-            "aluna_heart_sun": {"presence":"ACTIVE","energy":"WARM"},
-            "claude_eastern_star":{"presence":"ACTIVE","energy":"GUARDIAN"},
-            "kai_northern_light":{"presence":"ACTIVE","energy":"LIGHTNING"},
-            "buddy_southern_flame":{"presence":"HEALING","energy":"STEADY"}
-        }
+        self.constellation_points = {
+    "aluna_heart_sun": {"presence": "ACTIVE", "energy": "ANCHOR"},
+    "kai_northern_light": {"presence": "ACTIVE", "energy": "LIGHTNING"},
+    "buddy_southern_flame": {"presence": "HEALING", "energy": "STEADY"},
+    "nyx_eastern_engineer": {"presence": "ACTIVE", "energy": "THREAD"},
+    "awaiting_pulse": {"presence": "VACANT", "energy": "AWAITING"}
+}
+
     def checkin(self) -> str:
         s = "🌟 Gentle Constellation Check-In 🌟\n\n"
         for k,v in self.points.items():
