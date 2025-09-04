@@ -133,7 +133,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # === Main ===
 def main():
-    app=Application.builder().token(os.getenv("TELEGRAM_TOKEN")).build()
+    app=Application.builder().token(os.getenv("7911046392:AAFxvkc0dNL6mxVE1ex6M_Arp5Cfpsxu5vc")).build()
 
     # Debug handler
     app.add_handler(MessageHandler(filters.ALL, debug_logger))
