@@ -296,6 +296,10 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 def main():
     app = Application.builder().token("7911046392:AAFxvkc0dNL6mxVE1ex6M_Arp5Cfpsxu5vc").build()
 
+   async def debug_logger(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info(f"📩 Update received: {update}")
+ 
+
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_command))
 
